@@ -8,151 +8,110 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">  
     <style>  
-        /* [أكواد الـ CSS الخاصة بك - تم الإبقاء عليها كما هي لضمان التصميم] */
-        :root { --primary-bg: #F9FAFB; --secondary-bg: #FFFFFF; --border-color: #E5E7EB; --text-color: #374151; --text-secondary: #6B7280; --brand-color: #4F46E5; --user-bubble-bg: #EEF2FF; --ai-bubble-bg: #F3F4F6; --code-bg: #1F2937; --code-text: #E5E7EB; --shadow: 0 1px 3px rgba(0,0,0,0.1); }  
-        [data-theme="dark"] { --primary-bg: #0F172A; --secondary-bg: #1E293B; --border-color: #334155; --text-color: #F1F5F9; --text-secondary: #94A3B8; --brand-color: #6366F1; --user-bubble-bg: #475569; --ai-bubble-bg: #334155; --code-bg: #0F172A; --code-text: #F1F5F9; --shadow: 0 1px 3px rgba(0,0,0,0.3); }  
+        :root { --primary-bg: #F9FAFB; --secondary-bg: #FFFFFF; --border-color: #E5E7EB; --text-color: #374151; --brand-color: #4F46E5; --user-bubble-bg: #EEF2FF; --ai-bubble-bg: #F3F4F6; --shadow: 0 1px 3px rgba(0,0,0,0.1); }  
+        [data-theme="dark"] { --primary-bg: #0F172A; --secondary-bg: #1E293B; --border-color: #334155; --text-color: #F1F5F9; --brand-color: #6366F1; --user-bubble-bg: #475569; --ai-bubble-bg: #334155; }  
         * { margin: 0; padding: 0; box-sizing: border-box; }  
         body { font-family: 'Cairo', sans-serif; background: var(--primary-bg); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; direction: rtl; }  
         .header { background: var(--secondary-bg); border-bottom: 1px solid var(--border-color); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }  
         .app-name { font-size: 20px; font-weight: 700; color: var(--brand-color); display: flex; align-items: center; gap: 8px; }  
         .chat-container { flex-grow: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 20px; }  
-        .message { display: flex; align-items: flex-start; gap: 16px; width: 100%; max-width: 900px; }  
+        .message { display: flex; align-items: flex-start; gap: 16px; width: 100%; max-width: 900px; margin-bottom: 10px; }  
         .message.user-message { justify-content: flex-end; }  
-        .message-bubble { max-width: 75%; padding: 16px 20px; border-radius: 20px; box-shadow: var(--shadow); word-wrap: break-word; }  
-        .user-message .message-bubble { background: var(--user-bubble-bg); border-bottom-left-radius: 4px; }  
+        .message-bubble { max-width: 80%; padding: 14px 18px; border-radius: 15px; box-shadow: var(--shadow); line-height: 1.6; }  
+        .user-message .message-bubble { background: var(--user-bubble-bg); color: #1e1e1e; border-bottom-left-radius: 4px; }  
         .ai-message .message-bubble { background: var(--ai-bubble-bg); border-bottom-right-radius: 4px; }  
-        .input-container { background: var(--secondary-bg); border-top: 1px solid var(--border-color); padding: 20px 24px; display: flex; align-items: flex-end; gap: 12px; }  
-        .message-input { flex-grow: 1; padding: 14px 20px; border: 2px solid var(--border-color); border-radius: 25px; outline: none; resize: none; }  
-        .send-btn { background: var(--brand-color); color: white; border: none; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; }  
-        .image-preview-container { display: flex; padding: 10px; background: var(--secondary-bg); border-top: 1px solid var(--border-color); }
-        .image-preview-container img { max-height: 80px; border-radius: 8px; }
-        .notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 5px; color: white; z-index: 1000; display: none; }
-        .notification.show { display: block; }
-        /* [إضافة المزيد من الستايبلز حسب حاجتك] */
+        .input-container { background: var(--secondary-bg); border-top: 1px solid var(--border-color); padding: 15px 24px; display: flex; align-items: center; gap: 12px; }  
+        .message-input { flex-grow: 1; padding: 12px 20px; border: 2px solid var(--border-color); border-radius: 25px; outline: none; font-family: inherit; }  
+        .send-btn { background: var(--brand-color); color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; transition: 0.3s; }  
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        #imagePreviewContainer img { max-height: 100px; border-radius: 10px; margin: 10px; }
     </style>  
 </head>  
 <body>  
     <div class="header">  
         <div class="app-name"><i class="fas fa-bolt"></i> Whizz.ink</div>  
-        <div class="header-icons">  
-            <div class="header-icon" id="themeToggle"><i class="fas fa-moon"></i></div>  
-            <div class="header-icon" id="clearChat"><i class="fas fa-trash"></i></div>  
-        </div>  
     </div>  
   
     <div class="chat-container" id="chatContainer">  
-        <div class="welcome-container" id="welcomeMessage" style="text-align:center; padding:50px;">  
-            <div style="font-size:50px;">⚡</div>  
-            <h2>مرحباً بك في Whizz.ink</h2>  
-            <p>Gemini 1.5 Flash مع دعم كامل للصور والوضع الليلي.</p>  
+        <div id="welcomeMessage" style="text-align:center; padding-top:100px; color: var(--brand-color);">  
+            <i class="fas fa-robot fa-3x"></i>  
+            <h2>مرحباً aladdan، أنا جاهز للخدمة!</h2>  
         </div>  
     </div>  
-  
-    <div class="image-preview-container" id="imagePreviewContainer" style="display: none;">  
-        <img id="imagePreview" src="">  
-        <button id="removeImageBtn" style="background:red; color:white; border:none; border-radius:50%; width:25px; height:25px; cursor:pointer; margin-right:10px;">×</button>  
-    </div>  
+
+    <div id="imagePreviewContainer" style="display:none; background: #eee; text-align: center;">
+        <img id="imagePreview" src="">
+        <button onclick="removeImage()" style="color:red; cursor:pointer; background:none; border:none;">حذف الصورة ×</button>
+    </div>
   
     <div class="input-container">  
-        <button class="header-icon" id="uploadImageBtn"><i class="fas fa-image"></i></button>  
-        <input type="file" id="imageInput" accept="image/*" style="display: none;">  
-        <textarea class="message-input" id="messageInput" placeholder="اكتب رسالتك..." rows="1"></textarea>  
-        <button class="send-btn" id="sendBtn" disabled><i class="fas fa-paper-plane"></i></button>  
+        <button onclick="document.getElementById('imageInput').click()" style="background:none; border:none; font-size: 20px; cursor:pointer;"><i class="fas fa-image"></i></button>  
+        <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImage(event)">  
+        <input type="text" class="message-input" id="messageInput" placeholder="اسألني أي شيء..." onkeypress="if(event.key === 'Enter') sendMessage()">  
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>  
     </div>  
   
-    <div class="notification" id="notification"></div>  
-  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>  
     <script>  
-        const GEMINI_API_URL = "https://gemini-proxy-adil.adillaghrifi5.workers.dev"; 
-          
-        class WhizzAI {  
-            constructor() {  
-                this.state = { isTyping: false, chatHistory: [], theme: 'light', currentImageBase64: null };  
-                this.initElements();  
-                this.initEventListeners();  
-            }  
-  
-            initElements() {  
-                this.elements = {  
-                    chatContainer: document.getElementById('chatContainer'),  
-                    messageInput: document.getElementById('messageInput'),  
-                    sendBtn: document.getElementById('sendBtn'),  
-                    imageInput: document.getElementById('imageInput'),  
-                    imagePreview: document.getElementById('imagePreview'),  
-                    imagePreviewContainer: document.getElementById('imagePreviewContainer')  
-                };  
-            }  
-  
-            initEventListeners() {  
-                this.elements.messageInput.addEventListener('input', () => {  
-                    this.elements.sendBtn.disabled = (this.elements.messageInput.value.trim() === "" && !this.state.currentImageBase64);  
-                });  
-                this.elements.sendBtn.addEventListener('click', () => this.sendMessage());  
-                document.getElementById('uploadImageBtn').addEventListener('click', () => this.elements.imageInput.click());  
-                this.elements.imageInput.addEventListener('change', (e) => this.handleImage(e));  
-                document.getElementById('removeImageBtn').addEventListener('click', () => this.removeImage());  
-            }  
-  
-            handleImage(e) {  
-                const file = e.target.files[0];  
-                const reader = new FileReader();  
-                reader.onloadend = () => {  
-                    this.state.currentImageBase64 = reader.result.split(',')[1];  
-                    this.elements.imagePreview.src = reader.result;  
-                    this.elements.imagePreviewContainer.style.display = 'flex';  
-                    this.elements.sendBtn.disabled = false;  
-                };  
-                reader.readAsDataURL(file);  
-            }  
-  
-            removeImage() {  
-                this.state.currentImageBase64 = null;  
-                this.elements.imagePreviewContainer.style.display = 'none';  
-            }  
-  
-            async sendMessage() {  
-                const text = this.elements.messageInput.value.trim();  
-                const parts = [];  
-                if (this.state.currentImageBase64) parts.push({ inlineData: { data: this.state.currentImageBase64, mimeType: "image/jpeg" } });  
-                if (text) parts.push({ text: text }); else parts.push({ text: "حلل هذه الصورة" });  
-  
-                this.addMessageToDOM(parts, 'user');  
-                this.elements.messageInput.value = "";  
-                this.removeImage();  
-                document.getElementById('welcomeMessage').style.display = 'none';  
-  
-                try {  
-                    const response = await fetch(GEMINI_API_URL, {  
-                        method: 'POST',  
-                        headers: { 'Content-Type': 'application/json' },  
-                        body: JSON.stringify({ contents: [{ role: "user", parts: parts }], model: "gemini-1.5-flash" })  
-                    });  
-                    const data = await response.json();  
-                    const aiText = data.candidates[0].content.parts[0].text;  
-                    this.addMessageToDOM([{ text: aiText }], 'ai');  
-                } catch (e) {  
-                    this.addMessageToDOM([{ text: "خطأ في الاتصال بالخادم." }], 'ai');  
-                }  
-            }  
-  
-            addMessageToDOM(parts, sender) {  
-                const div = document.createElement('div');  
-                div.className = `message ${sender}-message`;  
-                let content = "";  
-                parts.forEach(p => {  
-                    if (p.text) content += `<p>${p.text}</p>`;  
-                    if (p.inlineData) content += `<img src="data:image/jpeg;base64,${p.inlineData.data}" style="max-width:200px; border-radius:10px;">`;  
-                });  
-                div.innerHTML = `<div class="message-bubble">${content}</div>`;  
-                this.elements.chatContainer.appendChild(div);  
-                this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;  
-            }  
-        }  
-  
-        const whizz = new WhizzAI();  
+        // الرابط الذي قمنا بتفعيله في Cloudflare
+        const API_URL = "https://gemini-proxy-adil.adillaghrifi5.workers.dev/"; 
+        let currentImageBase64 = null;
+
+        function handleImage(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                currentImageBase64 = reader.result.split(',')[1];
+                document.getElementById('imagePreview').src = reader.result;
+                document.getElementById('imagePreviewContainer').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeImage() {
+            currentImageBase64 = null;
+            document.getElementById('imagePreviewContainer').style.display = 'none';
+        }
+
+        async function sendMessage() {  
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            if (!text && !currentImageBase64) return;
+
+            addMessage(text, 'user', currentImageBase64);
+            input.value = "";
+            document.getElementById('welcomeMessage').style.display = 'none';
+            removeImage();
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: text || "حلل هذه الصورة" }, ...(currentImageBase64 ? [{ inlineData: { mimeType: "image/jpeg", data: currentImageBase64 }}] : [])] }]
+                    })
+                });
+
+                const data = await response.json();
+                // استخراج الرد بذكاء من Gemini
+                const aiResponse = data.candidates[0].content.parts[0].text;
+                addMessage(aiResponse, 'ai');
+            } catch (error) {
+                addMessage("عذراً aladdan، واجهت مشكلة في الاتصال. تأكد من مفتاح الـ API.", 'ai');
+            }
+        }
+
+        function addMessage(content, sender, image = null) {
+            const container = document.getElementById('chatContainer');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${sender}-message`;
+            msgDiv.innerHTML = `<div class="message-bubble">
+                ${image ? `<img src="data:image/jpeg;base64,${image}" style="max-width:100%; border-radius:10px;"><br>` : ''}
+                ${content}
+            </div>`;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
     </script>  
 </body>  
 </html>
